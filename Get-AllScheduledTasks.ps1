@@ -1,6 +1,9 @@
 #Requires -Modules ActiveDirectory
 Import-Module ActiveDirectory
 
+# AD OU to search for computers
+$OUDistinguishedName = "OU=Virtual,OU=Desktops,OU=PennyMac,DC=pnmac,DC=com"
+
 Function Connect-TaskScheduler
 {
     [CmdletBinding()]
@@ -181,8 +184,7 @@ Function Get-TaskSchedulerTasks
 
 $Tasks = @()
 
-$OUDistinguishedName = "OU=Virtual,OU=Desktops,OU=PennyMac,DC=pnmac,DC=com"
-ForEach ($Computer in (Get-ADComputer -Filter * -Properties OperatingSystem -SearchBase $OUDistinguishedName -SearchScope Subtree | Where-Object {$_.Enabled -eq $True -and $_.OperatingSystem -like "*Windows*" -and $_.DistinguishedName -notlike "*AWS*"} | Select-Object -ExpandProperty Name -First 10 | Sort-Object))
+ForEach ($Computer in (Get-ADComputer -Filter * -Properties OperatingSystem -SearchBase $OUDistinguishedName -SearchScope Subtree | Where-Object {$_.Enabled -eq $True -and $_.OperatingSystem -like "*Windows*"} | Select-Object -ExpandProperty Name | Sort-Object))
 {
     $Connection = Connect-TaskScheduler -ComputerName $Computer -Verbose
     $Tasks += Get-AllScheduledTasks -Session $Connection -Recurse
