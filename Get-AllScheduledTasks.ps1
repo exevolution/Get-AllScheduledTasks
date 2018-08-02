@@ -2,7 +2,7 @@
 Import-Module ActiveDirectory
 
 # AD OU to search for computers
-$OUDistinguishedName = "OU=Virtual,OU=Desktops,OU=PennyMac,DC=pnmac,DC=com"
+$OUDistinguishedName = "OU=Virtual,OU=Desktops,OU=MyDomain,DC=mydomain,DC=com"
 
 Function Connect-TaskScheduler
 {
